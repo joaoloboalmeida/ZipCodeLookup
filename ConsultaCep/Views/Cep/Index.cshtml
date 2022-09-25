@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewData["Title"] = "Pesquisa de CEP";
+}
+
+<h2 style="text-align: center">Consulta CEP</h2>
+
+<div style="text-align: center">
+    <div>
+        <label>Digite o CEP</label>
+        <input type="text" id="cep" class="numeric" maxlength="8"/> <button id="btnConsulta" class="btn btn-success">Consultar</button>
+    </div>
+</div>
+
+<div id="resultado" style="text-align: center">
+
+</div>
+
+
+<script>
+
+    function consultaCep() {
+
+        if ($("#cep").val().length != 8) {
+            alert('favor informa um cep com 8 digitos')
+            $('#resultado').html('')
+        }
+        else {
+            var cep = $("#cep").val();
+
+                 $.ajax({
+                     url: '/Cep/ConsultaCep',
+                     type: "post",
+                     dataType: 'json',
+                     async: false,
+                     data: { 'id': cep },
+                     success: function (data) {
+                         $('#resultado').html('')
+                         var str = "";
+                         str = "<b>Cep</b>: " + data['cep'] + '<br>'
+                         str += "<b>Logradouro</b>: " + data['logradouro'] + '<br>'
+                         str += "<b>Complemento</b>: " + data['complemento'] + '<br>'
+                         str += "<b>Bairro</b>: " + data['bairro'] + '<br>'
+                         str += "<b>Localidade</b>: " + data['localidade'] + '<br>'
+                         str += "<b>UF</b>: " + data['uf'] + '<br>'
+                         str += "<b>IBGE</b>: " + data['ibge'] + '<br>'
+                         str += "<b>GIA</b>: " + data['gia'] + '<br>'
+                         str += "<b>DDD</b>: " + data['ddd'] + '<br>'
+                         str += "<b>SIAFI</b>: " + data['siafi']
+
+                         $('#resultado').html(str)
+                     }
+            });
+        }
+    }
+
+    $('.numeric').keyup(function () {
+        $(this).val(this.value.replace(/\D/g, ''));
+    });
+
+    $("#btnConsulta").on('click',consultaCep);
+
+</script>
